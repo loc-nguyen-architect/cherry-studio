@@ -24,6 +24,7 @@ import { useCherryAccountSession } from '@renderer/hooks/useCherryAccountSession
 import { useCherryCloudSubscribeReminder } from '@renderer/hooks/useCherryCloudPlans'
 import { useSidebarShortcuts } from '@renderer/hooks/useSidebarShortcuts'
 import { ipcApi } from '@renderer/ipc'
+import { trackSubscriptionEntryView } from '@renderer/services/cherryCloudSubscriptionAnalytics'
 import { openSettingsTab } from '@renderer/services/mainWindowNavigation'
 import { toast } from '@renderer/services/toast'
 import { isMac } from '@renderer/utils/platform'
@@ -115,6 +116,9 @@ export default function Sidebar({
 
   const avatar = useAvatar()
   const showSubscribeDot = useCherryCloudSubscribeReminder()
+  useEffect(() => {
+    if (showSubscribeDot) trackSubscriptionEntryView('avatar_dot')
+  }, [showSubscribeDot])
   const handleUserMenuOpenChange = useCallback(
     (open: boolean) => {
       setUserMenuOpen(open)
