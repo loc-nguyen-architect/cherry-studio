@@ -6,7 +6,7 @@ import { expect, it } from 'vitest'
 import { applyMigrations } from '@data/db/applyMigrations'
 import { aiUsageRecordTable } from '@data/db/schemas/aiUsageRecord'
 
-const dbh = setupTestDatabase({ beforeMigration: '0035_agent_usage_ownership' })
+const dbh = setupTestDatabase({ beforeMigration: '0034_agent_usage_ownership' })
 
 // Adding session ownership must preserve existing monetary facts without guessing their owner.
 it('migrates a populated invocation ledger without rewriting old fees', () => {
