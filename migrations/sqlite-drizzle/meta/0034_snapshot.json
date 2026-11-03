@@ -1,8 +1,8 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "caabc1e2-53d7-4170-b2f4-930a63ea8044",
-  "prevId": "298e373e-c198-4beb-b0ca-c4572b390e65",
+  "id": "fdf359fd-ba55-4c91-8626-7b27f056b05a",
+  "prevId": "67e751ec-a76d-4cba-a92a-90fb1c7c01cd",
   "tables": {
     "agent": {
       "name": "agent",
@@ -917,13 +917,6 @@
           "notNull": false,
           "autoincrement": false
         },
-        "subagent_id": {
-          "name": "subagent_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
         "spawn_tool_call_id": {
           "name": "spawn_tool_call_id",
           "type": "text",
@@ -1001,7 +994,7 @@
           "name": "agent_session_context_child_uniq",
           "columns": [
             "parent_context_id",
-            "subagent_id"
+            "native_thread_id"
           ],
           "isUnique": true
         },
