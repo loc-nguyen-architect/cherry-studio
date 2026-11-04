@@ -92,7 +92,10 @@ async function nativeProbe(options: Pick<Options, 'agents'> = {}) {
   await mkdir(cwd)
   await mkdir(config)
   let input = new AsyncEventQueue<SDKUserMessage>()
-  const requests = new AsyncEventQueue<{ reply: ReturnType<typeof modelReply>; body: { messages: unknown[] } }>()
+  const requests = new AsyncEventQueue<{
+    reply: ReturnType<typeof modelReply>
+    body: { messages: SDKUserMessage['message'][] }
+  }>()
   const incoming = requests[Symbol.asyncIterator]()
   const responses = new Set<ServerResponse>()
   const failures: unknown[] = []
@@ -597,7 +600,16 @@ it.each([false, true])('preserves child identity but starts a new run on SendMes
     })
     followup.reply.finish('tool_use')
     const pending = [await probe.request(), await probe.request()]
-    const resumed = pending.find(({ body }) => JSON.stringify(body.messages).includes('Original child answer'))!
+    const resumedRequests = pending.filter(({ body }) =>
+      body.messages.some(
+        (message) =>
+          message.role === 'assistant' &&
+          Array.isArray(message.content) &&
+          message.content.some((block) => block.type === 'text' && block.text === 'Original child answer')
+      )
+    )
+    expect(resumedRequests).toHaveLength(1)
+    const resumed = resumedRequests[0]
     const resumedParent = pending.find((request) => request !== resumed)!
     expect(JSON.stringify(resumed.body.messages)).toContain('Continue with the original context')
     resumedParent.reply.block({ type: 'text', text: 'Parent need not wait for continuation' })
